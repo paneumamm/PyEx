@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
+from sympy.printing.pretty.pretty_symbology import line_width
+
 
 def use_chinese_font():
     """自动挑一个系统里装了的中文字体，返回字体名；找不到返回 None"""
@@ -61,10 +63,17 @@ def draw_fig1(df):
 
 def draw_fig2(df):
     rate = df.groupby("order_time")["is_overtime"].mean() * 100
+    index = rate.index
 
     fig, ax = plt.subplots(figsize=(7,4.5))
+    ax.plot(rate.index, rate.values, color="#4A87B8", linewidth=2, linestyle="--", marker="o")
+    ax.set_title("按下单小时统计的超时率变化")
+    ax.set_xlabel("下单小时(h)")
+    ax.set_ylabel("超时率(%)")
+    ax.grid(axis="y")
 
-    ax.plot(rate.index, rate.values, color="#4A87B8", marker="o")
+    for i, v in enumerate(rate):
+        ax.text(i+index[0], v+0.8, "%.1f" % v, ha="center", va="bottom",fontsize=9)
 
     save(fig, "fig2.png")
 
