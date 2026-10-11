@@ -1,0 +1,17 @@
+{
+  "R01": {
+    "total": 17,
+    "overtime": 5,
+    "rate": 0.2941
+  },
+  "R02": {
+    "total": 17,
+    "overtime": 6,
+    "rate": 0.3529
+  },
+  "R03": {
+    "total": 16,
+    "overtime": 8,
+    "rate": 0.5
+  }
+}
