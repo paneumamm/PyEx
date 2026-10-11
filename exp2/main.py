@@ -62,7 +62,7 @@ def draw_fig1(df):
 
 
 def draw_fig2(df):
-    rate = df.groupby("order_time")["is_overtime"].mean() * 100
+    rate = df.groupby(df["order_time"].dt.hour)["is_overtime"].mean() * 100
     index = rate.index
 
     fig, ax = plt.subplots(figsize=(7,4.5))
@@ -79,7 +79,14 @@ def draw_fig2(df):
 
 
 def draw_fig3(df):
-    pass
+    x = df["distance_km"]
+    y = df["actual_min"]
+
+    fig, ax = plt.subplots(figsize=(7,4.5))
+
+    ax.scatter(x, y , s=4, alpha=0.4 ,color="#4A87B8")
+
+    save(fig, "fig3.png")
 
 
 def draw_fig4(df):
@@ -97,7 +104,7 @@ def answers(df):
 def main():
     use_chinese_font()
     orders = pd.read_csv("../data/orders.csv", encoding="utf-8-sig")
-    orders["order_time"] = pd.to_datetime(orders["order_time"]).dt.hour
+    orders["order_time"] = pd.to_datetime(orders["order_time"]) #转化为pandas能识别的，便于后续分段提取
     draw_fig1(orders)
     draw_fig2(orders)
     draw_fig3(orders)
