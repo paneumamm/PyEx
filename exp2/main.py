@@ -21,29 +21,51 @@ def use_chinese_font():
             return name
     return None
 
+
+def print_answer(answers):
+    """answers 是一个字典，例如 {'Q1': 1234, 'Q2': 0.5678}"""
+    print("===ANSWER===")
+    for key in sorted(answers, key=lambda k: int(k[1:])):
+        value = answers[key]
+        if isinstance(value, float):
+            value = round(value, 4)
+        print(f"{key}={value}")
+    print("===END===")
+
+
 def save(fig, name):
     os.makedirs("../output/exp2", exist_ok=True)
     fig.tight_layout()
-    fig.savefig(f"../output/exp2/fig{name}.png",dpi=120)
+    fig.savefig(f"../output/exp2/{name}",dpi=120)
     plt.close(fig)
 
+
 def draw_fig1(df):
-    pass
+    rate = df.groupby("weather")["is_overtime"].mean()
+    fig, ax = plt.subplots(figsize=(7,4.5))
+    ax.bar(rate.index, rate)
+    save(fig, "fig1.png")
+
 
 def draw_fig2(df):
     pass
 
+
 def draw_fig3(df):
     pass
+
 
 def draw_fig4(df):
     pass
 
+
 def draw_fig5(df):
     pass
 
+
 def answers(df):
     pass
+
 
 def main():
     use_chinese_font()
@@ -53,6 +75,8 @@ def main():
     draw_fig3(orders)
     draw_fig4(orders)
     draw_fig5(orders)
+
+    #print_answer(answers(orders))
 
 if __name__ == "__main__":
     main()
