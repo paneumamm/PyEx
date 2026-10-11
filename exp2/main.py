@@ -46,7 +46,7 @@ def draw_fig1(df):
     rate = rate.reindex(index)
 
     fig, ax = plt.subplots(figsize=(7,4.5))
-    ax.bar(rate.index, rate, color="#4A8788", width=0.6)
+    ax.bar(rate.index, rate, color="#4A87B8", width=0.6)
 
     ax.set_title("各种天气下超时率对比")
     ax.set_xlabel("天气")
@@ -56,12 +56,17 @@ def draw_fig1(df):
     for i, v in enumerate(rate):
         ax.text(i, v+1, "%.1f" % v, ha="center", va="bottom",fontsize=9)
 
-
     save(fig, "fig1.png")
 
 
 def draw_fig2(df):
-    pass
+    rate = df.groupby("order_time")["is_overtime"].mean() * 100
+
+    fig, ax = plt.subplots(figsize=(7,4.5))
+
+    ax.plot(rate.index, rate.values, color="#4A87B8", marker="o")
+
+    save(fig, "fig2.png")
 
 
 def draw_fig3(df):
@@ -83,6 +88,7 @@ def answers(df):
 def main():
     use_chinese_font()
     orders = pd.read_csv("../data/orders.csv", encoding="utf-8-sig")
+    orders["order_time"] = pd.to_datetime(orders["order_time"]).dt.hour
     draw_fig1(orders)
     draw_fig2(orders)
     draw_fig3(orders)
