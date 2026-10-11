@@ -44,11 +44,19 @@ def draw_fig1(df):
     rate = df.groupby("weather")["is_overtime"].mean() * 100
     index = ["晴", "多云", "阴", "小雨", "大雨"]
     rate = rate.reindex(index)
+
     fig, ax = plt.subplots(figsize=(7,4.5))
-    ax.bar(rate.index, rate)
+    ax.bar(rate.index, rate, color="#4A8788", width=0.6)
+
     ax.set_title("各种天气下超时率对比")
     ax.set_xlabel("天气")
     ax.set_ylabel("超时率(%)")
+    ax.grid(axis="y")
+
+    for i, v in enumerate(rate):
+        ax.text(i, v+1, "%.1f" % v, ha="center", va="bottom",fontsize=9)
+
+
     save(fig, "fig1.png")
 
 
