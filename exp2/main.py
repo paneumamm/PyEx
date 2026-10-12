@@ -90,7 +90,14 @@ def draw_fig3(df):
 
 
 def draw_fig4(df):
-    pass
+    cnt = df["shop_type"].value_counts()
+
+    fig, ax = plt.subplots(figsize=(6,6))
+
+    ax.pie(cnt.values)
+
+    save(fig, "fig4.png")
+
 
 
 def draw_fig5(df):
