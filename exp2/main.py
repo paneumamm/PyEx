@@ -94,7 +94,8 @@ def draw_fig4(df):
 
     fig, ax = plt.subplots(figsize=(6,6))
 
-    ax.pie(cnt.values)
+    ax.pie(cnt.values, labels=cnt.index, autopct="%1.1f%%", shadow=False, startangle=90)
+    ax.set_title("五类商家的订单量占比")
 
     save(fig, "fig4.png")
 
