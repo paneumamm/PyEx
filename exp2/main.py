@@ -102,7 +102,19 @@ def draw_fig4(df):
 
 
 def draw_fig5(df):
-    pass
+    types = sorted(df["shop_type"].unique())
+
+    data = [df[df["shop_type"] == t]["actual_min"]
+            for t in types]
+
+    fig, ax = plt.subplots(figsize=(7,4.5))
+
+    ax.boxplot(data)
+    ax.set_title("不同商家类别的实际送达时长分布")
+    ax.set_xticklabels(types)
+    ax.set_ylabel("实际送达时间(分钟)")
+
+    save(fig, "fig5.png")
 
 
 def answers(df):
