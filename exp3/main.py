@@ -78,7 +78,16 @@ def step8(df):
     return df
 
 def answer(df):
-    pass
+    return {
+        "Q1": len(df),
+        "Q2": round(df["distance_km"].mean(), 4),
+        "Q3": round(df["order_amount"].mean(), 4),
+        "Q4": round(df["actual_min"].mean(), 4),
+        "Q5": round(df["is_overtime"].mean(), 4),
+        "Q6": df["shop_type"].nunique(),
+        "Q7": round(df["temperature"].mean(), 4),
+        "Q8": df.isna().sum().sum()
+    }
 
 def main():
     order_raw = pd.read_csv("../data/orders_raw.csv")
@@ -97,7 +106,7 @@ def main():
 
     order_raw.to_csv("../output/exp3/orders_clean.csv", index=False)
 
-    #print_answer(answer(order_raw))
+    print_answer(answer(order_raw))
 
 if __name__ == "__main__":
     main()
