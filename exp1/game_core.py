@@ -1,12 +1,11 @@
-"""Core domain objects for the campus delivery simulator.
+"""校园外卖骑手模拟器的核心对象。
 
-This module deliberately contains no file or GUI code.  Both ``main.py`` and
-``gui.py`` use the same rules defined here.
+本模块不处理文件或图形界面；main.py 和 gui.py 共用这里的规则。
 """
 
 
 class Order:
-    """A delivery order and its current delivery state."""
+    """外卖订单及其当前配送状态。"""
 
     def __init__(
         self,
@@ -28,9 +27,9 @@ class Order:
 
 
 class Rider:
-    """A rider who can carry at most three orders at the same time."""
+    """骑手，同一时间最多携带三单。"""
 
-    MAX_LOAD = 3
+    MAX_LOAD = 3                      # 同时最多带 3 单，类属性
 
     def __init__(self, rider_id):
         self.rider_id = rider_id
@@ -39,7 +38,8 @@ class Rider:
         self.holding = []
 
     def take(self, order):
-        """Take an order, returning ``False`` without side effects if full."""
+        """接单。成功返回 True 并把订单状态改为 'delivering'；
+           在手单数已达 MAX_LOAD 时返回 False，且不改变任何状态。"""
         if self.load >= Rider.MAX_LOAD:
             return False
 
@@ -48,11 +48,10 @@ class Rider:
         return True
 
     def complete(self, order_id, actual_min):
-        """Complete a held order and return whether it was overtime.
-
-        ``None`` is returned when the requested order is not currently held.
-        An order taking exactly its promised time is considered on time.
-        """
+        """完成订单。把订单状态改为 'done'，记录 actual_min，
+           从在手列表移除，并更新统计。
+           返回 True 表示这一单超时了，False 表示准时。
+           如果 order_id 不在在手列表里，返回 None。"""
         order = next(
             (item for item in self.holding if item.order_id == order_id), None
         )
@@ -71,12 +70,14 @@ class Rider:
 
     @property
     def load(self):
-        """Return the number of orders currently being delivered."""
+        """当前在手订单数量"""
         return len(self.holding)
 
     @property
     def stats(self):
-        """Return completed-order statistics with a four-decimal rate."""
+        """返回统计字典，键固定为这三个：
+           {"total": 已完成单数, "overtime": 超时单数, "rate": 超时率}
+           rate 保留 4 位小数；一单都没完成时 rate 为 0.0"""
         rate = 0.0
         if self.completed_count:
             rate = round(self.overtime_count / self.completed_count, 4)

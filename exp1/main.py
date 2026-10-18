@@ -1,4 +1,4 @@
-"""Run the deterministic experiment-1 delivery simulation."""
+"""运行实验一的确定性配送模拟。"""
 
 import csv
 import json
@@ -13,9 +13,9 @@ DEFAULT_OUTPUT_FILE = PROJECT_ROOT / "output" / "exp1" / "rider_stats.json"
 
 
 def print_answer(answers):
-    """Print answers in the exact format required by the grading script."""
+    """answers 是一个字典，例如 {'Q1': 1234, 'Q2': 0.5678}"""
     print("===ANSWER===")
-    for key in sorted(answers, key=lambda item: int(item[1:])):
+    for key in sorted(answers, key=lambda k: int(k[1:])):
         value = answers[key]
         if isinstance(value, float):
             value = round(value, 4)
@@ -24,12 +24,12 @@ def print_answer(answers):
 
 
 def actual_minutes(order):
-    """Calculate the delivery time used by the deterministic simulation."""
+    """计算确定性模拟所用的实际配送时长。"""
     return round(18 + order.distance_km * 5 + order.item_count * 2.5, 1)
 
 
 def load_orders(path=DEFAULT_DATA_FILE):
-    """Read the sample CSV and return a list of ``Order`` objects."""
+    """读取样例 CSV，返回 Order 对象列表。"""
     orders = []
     with Path(path).open("r", encoding="utf-8-sig", newline="") as file:
         for row in csv.DictReader(file):
@@ -47,14 +47,14 @@ def load_orders(path=DEFAULT_DATA_FILE):
 
 
 def _complete_all(riders):
-    """Complete every held order in rider and acceptance order."""
+    """按骑手顺序和接单顺序完成所有在手订单。"""
     for rider in riders:
         for order in list(rider.holding):
             rider.complete(order.order_id, actual_minutes(order))
 
 
 def deliver_all(orders, riders=None):
-    """Dispatch orders round-robin and deliver every batch of nine."""
+    """轮流派单，每派满九单结算一次。"""
     if riders is None:
         riders = [Rider("R01"), Rider("R02"), Rider("R03")]
 
@@ -70,7 +70,7 @@ def deliver_all(orders, riders=None):
 
 
 def build_answers(riders):
-    """Build Q1-Q5 from the final rider statistics."""
+    """根据骑手的最终统计结果计算 Q1 至 Q5。"""
     total = sum(rider.stats["total"] for rider in riders)
     overtime = sum(rider.stats["overtime"] for rider in riders)
     overall_rate = round(overtime / total, 4) if total else 0.0
@@ -85,7 +85,7 @@ def build_answers(riders):
 
 
 def save_stats(riders, path=DEFAULT_OUTPUT_FILE):
-    """Write rider statistics as a UTF-8 JSON object."""
+    """将骑手统计结果写入 UTF-8 编码的 JSON 文件。"""
     output_path = Path(path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     result = {rider.rider_id: rider.stats for rider in riders}

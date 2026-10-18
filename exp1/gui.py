@@ -1,4 +1,4 @@
-"""Tkinter interface for the campus delivery dispatch game."""
+"""校园外卖派单游戏的 tkinter 图形界面。"""
 
 import json
 import random
@@ -21,7 +21,7 @@ RIDER_LEVELS = {"R01": "老手", "R02": "熟练", "R03": "新手"}
 
 
 class DispatchGame:
-    """Interactive dispatcher using the rules from ``game_core.py``."""
+    """使用 game_core.py 中的规则实现交互式派单。"""
 
     def __init__(self, root):
         self.root = root
